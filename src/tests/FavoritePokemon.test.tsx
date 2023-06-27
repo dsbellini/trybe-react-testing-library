@@ -10,7 +10,7 @@ test('Testa se não tem nenhum poke favorito', () => {
   expect(noFavoritePokemon).toBeInTheDocument();
 });
 
-test('Testa os pokes favoritos', async () => {
+test('Testa os pokes favoritos', () => {
   const favoritesPokemons = [pokemonList[0], pokemonList[1]];
 
   renderWithRouter(<FavoritePokemon pokemonList={ favoritesPokemons } />);
