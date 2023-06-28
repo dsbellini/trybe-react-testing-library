@@ -1,8 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../renderWithRouter';
-import { Pokedex } from '../pages';
-import pokemonList from '../data';
 import App from '../App';
 
 describe('Testes do componente Pokedex', () => {
@@ -17,14 +15,25 @@ describe('Testes do componente Pokedex', () => {
 
     renderWithRouter(<App />);
 
-    const pokeOnScreen = screen.getByText('Pikachu');
+    const pikaOnScreen = screen.getByText('Pikachu');
     const howManyPokesOnScreen = screen.getAllByText('Pikachu');
     const nextPokeBtn = screen.getByRole('button', { name: /próximo pokémon/i });
 
     expect(howManyPokesOnScreen).toHaveLength(1);
-    expect(pokeOnScreen).toBeInTheDocument();
+    expect(pikaOnScreen).toBeInTheDocument();
     await userEvent.click(nextPokeBtn);
-    expect(pokeOnScreen).toBeInTheDocument();
+    expect(pikaOnScreen).toBeInTheDocument();
+  });
+
+  test('Mostra o primeiro poke ao clicar no ultimo poke da lista', async () => {
+    renderWithRouter(<App />);
+
+    const nextPokeBtn = screen.getByRole('button', { name: /próximo pokémon/i });
+    const pokeType = screen.getByTestId('pokemon-type');
+
+    expect(pokeType).toHaveTextContent('Electric');
+    await userEvent.click(nextPokeBtn);
+    expect(pokeType).toHaveTextContent('Fire');
   });
 
   test('Teste se os botões de filtragem por tipo têm o nome correto', async () => {
@@ -46,8 +55,8 @@ describe('Testes do componente Pokedex', () => {
   test('Teste se a Pokédex contém um botão para resetar o filtro', async () => {
     renderWithRouter(<App />);
     const allBtn = screen.getByRole('button', { name: /all/i });
-    const pokeOnScreen = screen.getByTestId('pokemon-name');
     const pokeTypesBtn = screen.getAllByTestId('pokemon-type-button');
+    const pokeOnScreen = screen.getByTestId('pokemon-name');
 
     expect(allBtn).toHaveTextContent('All');
 
@@ -56,5 +65,4 @@ describe('Testes do componente Pokedex', () => {
     await userEvent.click(allBtn);
     expect(pokeOnScreen).toHaveTextContent('Pikachu');
   });
-  // test('', () => {})
 });
